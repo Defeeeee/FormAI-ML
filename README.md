@@ -12,7 +12,7 @@ This repository contains the core machine learning components for the FōrmAI pr
 
 ## Project Structure
 
-* **API:** Contains the Flask API (`main.py`) for interacting with the ML models.
+* **API:** Contains the FastAPI API (`main.py`) for interacting with the ML models.
 * **Computer Vision:** Houses MediaPipe experiments and utilities for joint tracking and pose estimation.
 
 ## Tech Stack
@@ -21,7 +21,7 @@ This repository contains the core machine learning components for the FōrmAI pr
 * MediaPipe
 * TensorFlow
 * Numpy
-* Flask
+* FastAPI
 
 ## Integration
 
