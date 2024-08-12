@@ -8,6 +8,8 @@
 
 <br>
 
+<br>
+
 This repository contains the core machine learning components for the FōrmAI project, responsible for analyzing user movements and providing feedback on exercise technique.
 
 ## Project Structure
