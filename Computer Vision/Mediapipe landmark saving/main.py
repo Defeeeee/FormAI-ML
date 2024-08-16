@@ -109,6 +109,6 @@ df.loc[df['Knee Angle Change'] < 0, 'Phase'] = 'Down'
 df.loc[df['Knee Angle Change'] > 0, 'Phase'] = 'Up'
 
 # Save to CSV
-csv_file_path = 'squat_data_with_phases.csv'
+csv_file_path = 'data.csv'
 df.to_csv(csv_file_path, index=False)
 print(f"Data saved to {csv_file_path}")
