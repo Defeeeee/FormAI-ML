@@ -1,12 +1,24 @@
+import os
+
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
+from dotenv import load_dotenv
 
 app = FastAPI()
 
+load_dotenv()
 
-# Placeholder route, future routes will be added here
+# Your secret token, replace with your actual secret
+SECRET_TOKEN = os.getenv('TOKEN')
+
+
 @app.get('/')
-def check():
+def check(token: str):
+    if token != SECRET_TOKEN:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
+        )
     return 1
 
 
