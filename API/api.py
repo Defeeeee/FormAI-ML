@@ -13,7 +13,12 @@ SECRET_TOKEN = os.getenv('TOKEN')
 
 
 @app.get('/')
-def check(token: str):
+def check(token: str | None = None):
+    if token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token is required",
+        )
     if token != SECRET_TOKEN:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
