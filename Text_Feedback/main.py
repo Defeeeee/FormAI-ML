@@ -12,7 +12,7 @@ import time
 
 def analyze_video(video_path):
     # Load the trained model
-    pipe = joblib.load('../Model-scikit/model.pkl')
+    pipe = joblib.load('../Model_scikit/model.pkl')
 
     # Mediapipe setup
     mp_pose = mp.solutions.pose
