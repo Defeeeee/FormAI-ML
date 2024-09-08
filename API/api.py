@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException, status
 from dotenv import load_dotenv
 
 # Import the video analysis function from your analysis script
-from path/to/your/video_analysis_script import analyze_video  # Adjust the path accordingly
+from Text_Feedback.main import analyze_video  # Adjust the path accordingly
 
 app = FastAPI()
 
