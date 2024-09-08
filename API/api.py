@@ -1,6 +1,6 @@
 import os
 import sys
-
+import ssl
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
 from dotenv import load_dotenv
@@ -10,6 +10,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Text_Feedback.main import analyze_video
 
 app = FastAPI()
+
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain('../cert.pem', keyfile='../key.pem')
 
 load_dotenv()
 
@@ -35,4 +38,4 @@ def analyze_plank_video(video_path: str | None = None):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=80)
+    uvicorn.run(app, host="0.0.0.0", port=80, ssl=ssl_context)
