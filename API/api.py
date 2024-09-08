@@ -1,11 +1,13 @@
 import os
+import sys
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
 from dotenv import load_dotenv
 
-# Import the video analysis function from your analysis script
-from Text_Feedback.main import analyze_video  # Adjust the path accordingly
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from Text_Feedback.main import analyze_video
 
 app = FastAPI()
 
@@ -16,37 +18,15 @@ SECRET_TOKEN = os.getenv('TOKEN')
 
 
 @app.get('/')
-def check(token: str | None = None):
-    if token is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token was not provided",
-        )
-    if token != SECRET_TOKEN:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-        )
+def check():
     return 1
 
 
 @app.get('/analyze_plank')
-def analyze_plank_video(token: str | None = None, video_path: str | None = None):
-    if token is None:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token was not provided",
-        )
-    if token != SECRET_TOKEN:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token",
-        )
+def analyze_plank_video(video_path: str | None = None):
+    print(video_path)
     if video_path is None:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Video path was not provided",
-        )
+        video_path = '/Users/defeee/Downloads/Screenshot 2024-09-08 at 12.14.38.png'
 
     # Call the video analysis function
     results = analyze_video(video_path)
