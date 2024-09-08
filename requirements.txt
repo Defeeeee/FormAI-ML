@@ -7,3 +7,6 @@ seaborn
 plotly
 mediapipe
 opencv-python
+fastapi
+uvicorn
+python-dotenv
