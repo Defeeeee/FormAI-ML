@@ -1,6 +1,5 @@
 import os
 import sys
-import ssl
 import uvicorn
 from fastapi import FastAPI, HTTPException, status
 from dotenv import load_dotenv
@@ -35,4 +34,4 @@ def analyze_plank_video(video_path: str | None = None):
 
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=443, ssl_certfile='/home/ubuntu/FormAI-ML/API/cert.pem', ssl_keyfile='/home/ubuntu/FormAI-ML/API/key.pem')
+    uvicorn.run(app, host="0.0.0.0", port=8000)
