@@ -10,3 +10,4 @@ seaborn
 plotly
 mediapipe
 opencv-python
+joblib
