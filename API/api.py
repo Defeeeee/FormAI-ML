@@ -1,12 +1,12 @@
 import os
 import sys
 import uvicorn
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI
 from dotenv import load_dotenv
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from Text_Feedback.main import analyze_video
+from Feedback.Text_Feedback.main import analyze_video
 
 app = FastAPI()
 
