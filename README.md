@@ -14,6 +14,17 @@ This repository contains the core machine learning components for the FōrmAI pr
 
 * **API:** Contains the FastAPI API (`main.py`) for interacting with the ML models.
 * **Computer Vision:** Houses MediaPipe experiments and utilities for joint tracking and pose estimation.
+  * **MediaPipe:** Contains the MediaPipe Pose module for joint tracking.
+* **Feedback:** Contains the feedback generation logic for the ML models.
+  * **Live Feedback:** Contains the logic for providing real-time feedback on user movements.
+  * **Text Feedback:** Contains the logic for providing feedback on user movements after the exercise has been completed.
+* **Models:** Contains the machine learning models for analyzing user movements. 
+  * **Core:** Contains the core machine learning models for analyzing user movements.
+      * **Plank:** Contains the machine learning model for analyzing plank form.
+      * **Squat:** Contains the machine learning model for analyzing squat form.
+      * **Pushup:** Contains the machine learning model for analyzing pushup form.
+      * **Deadlift:** Contains the machine learning model for analyzing deadlift form.
+  * **Utilities:** Contains utilities for loading and saving machine learning models.
 
 ## Tech Stack
 
