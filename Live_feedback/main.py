@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Load the trained model
-pipe = joblib.load('../Model_scikit/model.pkl')
+pipe = joblib.load('../Model/Plank/model.pkl')
 
 # Mediapipe setup
 mp_pose = mp.solutions.pose

@@ -12,7 +12,7 @@ import time
 
 def analyze_video(video_path):
     # Load the trained model
-    pipe = joblib.load('../Model_scikit/model.pkl')
+    pipe = joblib.load('../Model/Plank/model.pkl')
 
     # Mediapipe setup
     mp_pose = mp.solutions.pose
@@ -87,7 +87,7 @@ def analyze_video(video_path):
     percentages = {stage: (time / total_time) * 100 for stage, time in stage_times.items()}
     frame_counts = {stage: (count / total_frames) * 100 for stage, count in stage_counts.items()}
 
-    # Generate additional insights (example)
+    # Generate additional insights
     additional_insights = ""
     if percentages['Correct'] > 80:
         additional_insights += "\nGreat job maintaining a correct plank position for most of the exercise!"
