@@ -2,6 +2,7 @@
 This script analyzes a video of a plank exercise using a pre-trained model,
 provides performance feedback through the terminal, and includes additional insights.
 """
+import os
 
 import cv2
 import mediapipe as mp
@@ -9,10 +10,12 @@ import pandas as pd
 import joblib
 import time
 
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 def analyze_video(video_path):
     # Load the trained model
-    pipe = joblib.load('../../Models/Core/Plank/model.pkl')
+    pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
 
     # Mediapipe setup
     mp_pose = mp.solutions.pose
