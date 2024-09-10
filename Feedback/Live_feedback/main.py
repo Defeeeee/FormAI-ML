@@ -10,9 +10,7 @@ import cv2
 import mediapipe as mp
 import pandas as pd
 import joblib
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+import os
 import warnings
 
 # Suppress warnings
@@ -20,7 +18,8 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Load the trained model
-pipe = joblib.load('../../Models/Core/Plank/model.pkl')
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
 
 # Mediapipe setup
 mp_pose = mp.solutions.pose
