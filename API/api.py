@@ -23,10 +23,7 @@ def analyze_plank_video(video_path: str | None = None):
         video_path = '/Users/defeee/Downloads/Screenshot 2024-09-08 at 12.14.38.png'
 
     # Call the video analysis function
-    try:
-        analyze_video(video_path)
-    except Exception as e:
-        return str(e)
+    analyze_video(video_path)
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
