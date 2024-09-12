@@ -35,7 +35,7 @@ def analyze_plank_video(video_path: str | None = None):
 
 @app.get('/analyze_plank/live')
 def analyze_plank_live_feed():
-    return {'error': 'Not implemented yet'}
+    return {'error': 'WIP: Not implemented yet'}
     # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 
