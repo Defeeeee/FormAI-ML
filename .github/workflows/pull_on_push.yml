@@ -1,0 +1,25 @@
+name: Pull on Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  pull-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Pull latest changes on serve
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_IP: ${{ secrets.SERVER_IP }}
+      run: |
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP 'cd /home/ubuntu/FormAI-ML && sudo git pull && pm2 restart 0'
