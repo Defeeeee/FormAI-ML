@@ -3,6 +3,7 @@ import mediapipe as mp
 import numpy as np
 import pandas as pd
 
+
 def extract_features_from_video(video_url):
     """Retrieves video from URL and extracts pose features using MediaPipe."""
     cap = cv2.VideoCapture(video_url)
@@ -34,6 +35,7 @@ def extract_features_from_video(video_url):
     cv2.destroyAllWindows()
     return np.array(all_features)
 
+
 def calculate_angle(a, b, c):
     a = np.array(a)
     b = np.array(b)
@@ -47,6 +49,7 @@ def calculate_angle(a, b, c):
 
     return angle
 
+
 # MediaPipe landmark indices
 LEFT_SHOULDER = 11
 RIGHT_SHOULDER = 12
@@ -56,6 +59,7 @@ LEFT_KNEE = 25
 RIGHT_KNEE = 26
 LEFT_ANKLE = 27
 RIGHT_ANKLE = 28
+
 
 # Function to extract data from a single frame
 def extract_data_from_frame(landmarks):
@@ -83,6 +87,7 @@ def extract_data_from_frame(landmarks):
 
     return [time, left_knee_angle, right_knee_angle, left_hip_angle, right_hip_angle,
             left_knee_position, right_knee_position]
+
 
 # Example Usage
 video_url = '/Users/defeee/Downloads/stock-footage-online-workout-service-professional-trainer-explaining-exercise-virtual-video-tutorial-for (1).mp4'
