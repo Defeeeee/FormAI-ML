@@ -10,12 +10,21 @@ import pandas as pd
 import joblib
 import time
 
+from scipy.optimize import brent
+
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-def analyze_video(video_path):
+def analyze_video(video_path, model=None):
     # Load the trained model
-    pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
+    match model.lower():
+        case None:
+            pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
+        case 'plank':
+            pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
+        case 'squat':
+            return {'error': 'Squat model not available WIP'}
+            # pipe = joblib.load(os.path.join(root, 'Models/Core/Squat/model.pkl'))
 
     # Mediapipe setup
     mp_pose = mp.solutions.pose
