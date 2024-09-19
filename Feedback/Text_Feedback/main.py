@@ -15,9 +15,9 @@ from scipy.optimize import brent
 root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-def analyze_video(video_path, model: str):
+def analyze_video(video_path, model):
     # Load the trained model
-    match str(model).lower():
+    match model:
         case None:
             pipe = joblib.load(os.path.join(root, 'Models/Core/Plank/model.pkl'))
         case 'plank':
