@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 
 import uvicorn
@@ -13,6 +14,16 @@ from Feedback.Text_Feedback.main import analyze_video
 app = FastAPI()
 
 
+def check_resource(url: str):
+    command = f"curl -o /dev/null --silent -Iw '%{{http_code}}' {url}"
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        status_code = result.stdout.strip()  # Extract the status code
+        return 1 if status_code == '200' else 0
+    except Exception as e:
+        return {"error": str(e)}
+
+
 @app.get('/')
 def check():
     return 1
@@ -20,9 +31,11 @@ def check():
 
 @app.get('/analyze_plank')
 def analyze_plank_video(video_path: str | None = None):
-    print(video_path)
     if video_path is None:
-        video_path = '/Users/defeee/Downloads/Screenshot 2024-09-08 at 12.14.38.png'
+        return {'error': 'Please provide a video path'}
+
+    if check_resource(video_path) == 0:
+        return {'error': 'Invalid video path'}
 
     # Call the video analysis function
     try:
@@ -37,6 +50,7 @@ def analyze_plank_video(video_path: str | None = None):
 def analyze_plank_live_feed():
     return {'error': 'WIP: Not implemented yet'}
     # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
+
 
 @app.get('/classify')
 def classify():
