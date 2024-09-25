@@ -38,6 +38,10 @@ def analyze_plank_live_feed():
     return {'error': 'WIP: Not implemented yet'}
     # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
 
+@app.get('/classify')
+def classify():
+    return {'error': 'WIP: Not implemented yet'}
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8080)
