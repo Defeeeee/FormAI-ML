@@ -22,4 +22,4 @@ jobs:
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP 'cd /home/ubuntu/FormAI-ML && sudo git pull && pm2 restart 0'
+        ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP 'cd /home/ubuntu/FormAI-ML && sudo git pull && source ./venv/bin/activate && pip install -r requirements.txt && pm2 restart 0'
