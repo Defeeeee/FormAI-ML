@@ -26,7 +26,7 @@ def analyze_plank_video(video_path: str | None = None):
 
     # Call the video analysis function
     try:
-        analysis = analyze_video(video_path)
+        analysis = analyze_video(video_path, 'plank')
     except Exception as e:
         return {'error': str(e)}
 
