@@ -1,13 +1,11 @@
 fastapi
 uvicorn
 python-dotenv
-jupyter
 matplotlib
 numpy
 pandas
 scikit-learn
 seaborn
-plotly
 mediapipe
 opencv-python
 joblib
