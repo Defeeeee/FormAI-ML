@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Feedback.Live_feedback.main import analyze_live_feed
 from Feedback.Text_Feedback.main import analyze_video
+from Feedback.Classifier.main import classify
 
 app = FastAPI()
 
@@ -53,8 +54,8 @@ def analyze_plank_live_feed():
 
 
 @app.get('/classify')
-def classify():
-    return {'error': 'WIP: Not implemented yet'}
+def classifiere(path: str | None = None):
+    return classify(path)
 
 
 if __name__ == '__main__':
