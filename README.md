@@ -1,6 +1,6 @@
 # FōrmAI Machine Learning Module
 
-[![Three Clause BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/license/bsd-3-clause) [![Commit Check](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml/badge.svg)](https://github.com/Defeeeee/FormAI/actions/workflows/commit-check.yml)   
+[![Three Clause BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/license/bsd-3-clause) [![Commit Check](https://github.com/commit-check/commit-check-action/actions/workflows/commit-check.yml/badge.svg)](https://github.com/Defeeeee/FormAI/actions/workflows/commit-check.yml) 
 
 
 <img src="https://github.com/user-attachments/assets/00931eda-1efb-4da2-be12-f5f7ab0af75d" width="250">
