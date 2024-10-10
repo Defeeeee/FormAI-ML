@@ -39,8 +39,8 @@ def extract_landmarks(image):
         and contains the x, y coordinates of visible landmarks.
     """
 
-    with mp_pose.Pose(min_detection_confidence=0.5,
-                      min_tracking_confidence=0.5) as pose:
+    with mp_pose.Pose(min_detection_confidence=0.7,
+                      min_tracking_confidence=0.7) as pose:
 
         # Recolor image to RGB
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -240,8 +240,32 @@ def process_images(image_links):
 
 
 if __name__ == "__main__":
-    image_links = [
-        "https://i.ytimg.com/vi/pSHjTRCQxIw/maxresdefault.jpg",
-        # ... add more image links here ...
-    ]
+    image_links = ['https://hips.hearstapps.com/hmg-prod/images/hdm119918mh15842-1545237096.png',
+                   'https://www.shape.com/thmb/T2GyvzFah3XYR8_L8W16ANWBTXs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/low-plank-hold-b8a63da1ef844f00b6f6a21141ba1d87.jpg',
+                   'https://media.self.com/photos/615378c1150f8742ac896749/16:9/w_4991,h_2807,c_limit/Forearm%20Plank%20-%20Delise_001.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKschFmUKMdDGShQIwpQMcM_WeGHbKEZoUPQ&s',
+                   'https://t4.ftcdn.net/jpg/08/41/38/01/360_F_841380116_U81vXZJRojFn2BuAav7MLUafRgMLLjym.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnQCwpGPHT7oShh1A5rx2FXOHVlfq4DrXjEA&s',
+                   'https://embed-ssl.wistia.com/deliveries/edd92d0077218d633afa90bbe3d8652ce9e0b400.webp?image_crop_resized=1280x720',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaNXmp3hOmZenCHAfc8VKs9bzJ63X2p9ZdWL9ZjYueVDOT880satIuLq0OyvRjnotAykE&usqp=CAU',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYOr6zfQgHEaY_rse8U-ICPMiU4yWvwNhS9Vn7Uy0WJYcHjvUZTwTlbC-OKykKHWZbP08&usqp=CAU',
+                   'https://cdn.shopify.com/s/files/1/0264/4885/5122/t/32/assets/pf-e1bfb663--Screenshot-20210527-at-091452min.png?v=1622712364',
+                   'https://www.shape.com/thmb/T2GyvzFah3XYR8_L8W16ANWBTXs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/low-plank-hold-b8a63da1ef844f00b6f6a21141ba1d87.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLdNeW_0tzVU2bcRCpWQCGpAu5RxIK3Uw-Vw&s',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT__rzeah4I--qBl6HuqWTkUH0aaRCwkb3d6A&s',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNiS0Kkbztj6uW92ymJFogPUr8WvttF1YSjw&s',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMAwJcqIfmCGNcZnGxzXBwr_a6OpD05-a_ymqXjGXn4yXutRGQRMQEk0Cuh63TlBchVgs&usqp=CAU',
+                   'https://blog.nasm.org/hs-fs/hubfs/standard-plank.jpg?width=1000&name=standard-plank.jpg',
+                   'https://media.post.rvohealth.io/wp-content/uploads/sites/2/2019/05/Plank-1.png',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMvlmSgWN5PqkZozzFIm0aV4LqlCRwToUKag&s',
+                   'https://www.peacefuldumpling.com/wp-content/uploads/2019/05/modified_plank_stepouts.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStgb3c_6I-Eydl4oie5C35PdMoVqaUu_guNw&s',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5WSj0Lmhs9E3WEJuGHv4dDdOXnop9cFRhKw&s',
+                   'https://i.ytimg.com/vi/ql8qf61rCDo/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCwpjwk1fDPzwGTyH9-8-rtpBDMyQ',
+                   'https://i.ytimg.com/vi/ZoZV-0fiX5U/maxresdefault.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7TC9QxI4_dsQK1qpDo8VHlsI2rCHlgi3GXQ&s',
+                   'https://www.stretching-exercises-guide.com/images/repeated_extension_in_lying.jpg',
+                   'https://www.wikihow.com/images/thumb/6/68/Do-a-Lower-Back-Stretch-Safely-Step-17-preview.jpg/550px-nowatermark-Do-a-Lower-Back-Stretch-Safely-Step-17-preview.jpg',
+                   'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6d6nMYnFENB7YT8fsG9tU4Gjm0fVv5B7qrg&s'
+                   ]
     process_images(image_links)
