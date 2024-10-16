@@ -1,7 +1,8 @@
+import csv
+
 import cv2
 import mediapipe as mp
 import numpy as np
-import csv
 import requests
 
 mp_pose = mp.solutions.pose
@@ -93,6 +94,20 @@ def preprocess_landmarks(landmarks_list, exercise_type="plank"):
             mp_pose.PoseLandmark.RIGHT_ANKLE.value,
         ]
 
+    elif exercise_type == "squat":
+        # imp_landmarks for squat = ["NOSE", "LEFT_SHOULDER", "RIGHT_SHOULDER", "LEFT_HIP", "RIGHT_HIP", "LEFT_KNEE", "RIGHT_KNEE", "LEFT_ANKLE", "RIGHT_ANKLE"]
+        selected_indices = [
+            mp_pose.PoseLandmark.NOSE.value,
+            mp_pose.PoseLandmark.LEFT_SHOULDER.value,
+            mp_pose.PoseLandmark.RIGHT_SHOULDER.value,
+            mp_pose.PoseLandmark.LEFT_HIP.value,
+            mp_pose.PoseLandmark.RIGHT_HIP.value,
+            mp_pose.PoseLandmark.LEFT_KNEE.value,
+            mp_pose.PoseLandmark.RIGHT_KNEE.value,
+            mp_pose.PoseLandmark.LEFT_ANKLE.value,
+            mp_pose.PoseLandmark.RIGHT_ANKLE.value,
+        ]
+
     normalized_landmarks = []
     for frame_landmarks in landmarks_list:
         temp = []
@@ -116,7 +131,7 @@ def preprocess_landmarks(landmarks_list, exercise_type="plank"):
                         symmetric_index = mp_pose.PoseLandmark(i - 1).value
                     symmetric_landmark = frame_landmarks[symmetric_index]
                     if symmetric_landmark[
-                            2] >= 0.5:  # If the symmetric landmark is visible
+                        2] >= 0.5:  # If the symmetric landmark is visible
                         # Estimate based on symmetry
                         temp.append([1 - symmetric_landmark[0],
                                      symmetric_landmark[1]])
@@ -165,6 +180,42 @@ def label_plank(image, landmarks):
     cv2.destroyAllWindows()
     return label
 
+
+def label_squat(image, landmarks):
+    """
+    Displays the image with landmarks and prompts the user to label the squat.
+
+    Args:
+        image: The image to display.
+        landmarks: The landmarks detected in the image.
+
+    Returns:
+        The label (0, 1, or 2) assigned by the user.
+    """
+
+    # Draw landmarks on the image
+    mp.solutions.drawing_utils.draw_landmarks(image, landmarks,
+                                              mp_pose.POSE_CONNECTIONS)
+
+    # Display the image and wait for user input
+    cv2.imshow('Label Squat', image)
+    while True:
+        key = cv2.waitKey(0)  # Wait indefinitely for a key press
+        if key == ord('0'):
+            label = 0  # Correct
+            break
+        elif key == ord('1'):
+            label = 1  # Low back
+            break
+        elif key == ord('2'):
+            label = 2  # High back
+            break
+        elif key == 27:  # Esc key
+            label = -1  # Exit labeling (optional)
+            break
+
+    cv2.destroyAllWindows()
+    return label
 
 def process_images(image_links):
     """
@@ -239,6 +290,80 @@ def process_images(image_links):
             writer.writerow(flattened_row)  # Write the flattened row to the CSV
 
 
+def process_squat(image_links):
+    """
+    Processes a list of image links, extracts landmarks, labels planks, and saves data to CSV.
+
+    Args:
+        image_links: A list of URLs or file paths to images.
+    """
+
+    data = []  # List to store image data and labels
+
+    with mp_pose.Pose(min_detection_confidence=0.5,
+                      min_tracking_confidence=0.5) as pose:
+        for image_link in image_links:
+            # Load the image using the new function
+            try:
+                image = load_image_from_url(image_link)
+                if image is None:
+                    print(f"Failed to load image: {image_link}")
+                    continue
+
+                # Extract and preprocess landmarks
+                try:
+                    # Recolor image to RGB
+                    image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                    image_rgb.flags.writeable = False
+
+                    # Make detection (using the 'pose' object)
+                    results = pose.process(image_rgb)
+
+                    # Recolor back to BGR
+                    image_rgb.flags.writeable = True
+                    image = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
+
+                    landmarks_list = extract_landmarks(image.copy())
+                    if landmarks_list:
+                        preprocessed_landmarks = preprocess_landmarks(
+                            landmarks_list, exercise_type="squat")[0]
+
+                        # Label the plank (pass the 'results' object here)
+                        label = label_squat(image.copy(),
+                                            results.pose_landmarks)
+                        if label == -1:  # Exit if Esc key is pressed
+                            break
+
+                        # Store the data (without image link)
+                        data.append(preprocessed_landmarks + [label])
+                    else:
+                        print(f"No landmarks detected for {image_link}")
+
+                except Exception as e:
+                    print(f"Error processing landmarks for {image_link}: {e}")
+
+            except Exception as e:
+                print(f"Error loading or processing image {image_link}: {e}")
+
+    # Save data to CSV (without image link column)
+    with open('squat_data.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['nose_x', 'nose_y',
+                         'left_shoulder_x', 'left_shoulder_y', 'right_shoulder_x',
+                         'right_shoulder_y', 'left_hip_x', 'left_hip_y',
+                         'right_hip_x', 'right_hip_y',
+                         'left_knee_x', 'left_knee_y', 'right_knee_x',
+                         'right_knee_y', 'left_ankle_x', 'left_ankle_y',
+                         'right_ankle_x', 'right_ankle_y', 'label'])
+
+        for row in data:
+            flattened_row = []
+            for landmark in row[:-1]:
+                flattened_row.extend(landmark)
+            flattened_row.append(row[-1])
+            writer.writerow(flattened_row)
+
+
 if __name__ == "__main__":
     image_links = ['https://hips.hearstapps.com/hmg-prod/images/hdm119918mh15842-1545237096.png',
                    'https://www.shape.com/thmb/T2GyvzFah3XYR8_L8W16ANWBTXs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/low-plank-hold-b8a63da1ef844f00b6f6a21141ba1d87.jpg',
@@ -269,3 +394,4 @@ if __name__ == "__main__":
                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6d6nMYnFENB7YT8fsG9tU4Gjm0fVv5B7qrg&s'
                    ]
     process_images(image_links)
+    process_squat(image_links)
