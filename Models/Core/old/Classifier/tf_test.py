@@ -11,8 +11,8 @@ from sklearn.inspection import permutation_importance
 from sklearn.base import ClassifierMixin
 
 # Read the CSV files into Pandas Dataframes
-squat_df = pd.read_csv("../Squat/squatdata.csv")
-plank_df = pd.read_csv("../Plank/ds.csv")
+squat_df = pd.read_csv("../../Squat/old/squatdata.csv")
+plank_df = pd.read_csv("../../Plank/old/ds.csv")
 
 # Drop the 'label' column from both DataFrames if it exists
 if 'label' in squat_df.columns:
