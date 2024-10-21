@@ -8,8 +8,8 @@ from fastapi.responses import StreamingResponse
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from Feedback.Live_feedback.main import analyze_live_feed
-from Feedback.Text_Feedback.main import analyze_video
+# from Feedback.Live_feedback.main import analyze_live_feed
+# from Feedback.Text_Feedback.main import analyze_video
 
 app = FastAPI()
 
@@ -29,21 +29,21 @@ def check():
     return 1
 
 
-@app.get('/analyze_plank')
-def analyze_plank_video(video_path: str | None = None):
-    if video_path is None:
-        return {'error': 'Please provide a video path'}
-
-    if check_resource(video_path) == 0:
-        return {'error': 'Invalid video path'}
-
-    # Call the video analysis function
-    try:
-        analysis = analyze_video(video_path, 'plank')
-    except Exception as e:
-        return {'error': str(e)}
-
-    return analysis
+# @app.get('/analyze_plank')
+# def analyze_plank_video(video_path: str | None = None):
+#     if video_path is None:
+#         return {'error': 'Please provide a video path'}
+#
+#     if check_resource(video_path) == 0:
+#         return {'error': 'Invalid video path'}
+#
+#     # Call the video analysis function
+#     try:
+#         analysis = analyze_video(video_path, 'plank')
+#     except Exception as e:
+#         return {'error': str(e)}
+#
+#     return analysis
 
 
 @app.get('/analyze_plank/live')
@@ -52,9 +52,9 @@ def analyze_plank_live_feed():
     # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
 
 
-@app.get('/classify')
-def classifiere(path: str | None = None):
-    return classify(path)
+# @app.get('/classify')
+# def classifiere(path: str | None = None):
+#     return classify(path)
 
 
 if __name__ == '__main__':
