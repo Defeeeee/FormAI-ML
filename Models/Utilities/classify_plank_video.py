@@ -4,8 +4,11 @@ import torch.nn.functional as F
 import cv2
 import mediapipe as mp
 import numpy as np
+import os
 
 mp_pose = mp.solutions.pose
+
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 class Net(nn.Module):
     def __init__(self):
@@ -20,7 +23,7 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
 
-def classify_plank_live(model_path='../Core/Plank/model.pth'):
+def classify_plank_live(model_path=os.path.join(root, 'Models/Core/Plank/model.pth')):
     """
     Classifies plank poses from a live camera feed and displays the
     predictions with confidence on the video stream.

@@ -5,8 +5,11 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import requests
+import os
 
 mp_pose = mp.solutions.pose
+
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
 class Net(nn.Module):
@@ -23,7 +26,7 @@ class Net(nn.Module):
         return x
 
 
-def classify_plank(image_url, model_path='../Core/Plank/model.pth'):  # Default model path
+def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/model.pth')):
     """
     Classifies a plank pose from an image URL.
 
