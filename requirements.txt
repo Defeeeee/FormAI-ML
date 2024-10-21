@@ -9,3 +9,5 @@ seaborn
 mediapipe
 opencv-python
 joblib
+torch
+requests
