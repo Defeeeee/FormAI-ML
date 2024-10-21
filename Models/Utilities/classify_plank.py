@@ -6,6 +6,7 @@ import mediapipe as mp
 import numpy as np
 import requests
 import os
+import io
 
 mp_pose = mp.solutions.pose
 
@@ -24,6 +25,29 @@ class Net(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+
+
+def load_model_from_buffer(model_path):
+    """
+    Loads a PyTorch model from a file path into a buffer using io.BytesIO.
+
+    Args:
+      model_path: The path to the trained PyTorch model file.
+
+    Returns:
+      The loaded PyTorch model.
+    """
+    try:
+        with open(model_path, 'rb') as f:
+            buffer = io.BytesIO(f.read())
+        model = Net()
+        model.load_state_dict(torch.load(buffer))
+        model.eval()  # Set the model to evaluation mode
+        return model
+    except FileNotFoundError:
+        raise FileNotFoundError("Error: Model file not found.")
+    except Exception as e:
+        raise Exception(f"Error loading model: {e}")
 
 
 def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/model.pth')):
@@ -46,9 +70,7 @@ def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/m
 
     # Load the trained model
     try:
-        model = Net()
-        model.load_state_dict(torch.load(model_path))
-        model.eval()  # Set the model to evaluation mode
+        model = load_model_from_buffer(model_path)
     except FileNotFoundError:
         return "Error: Model file not found."
     except Exception as e:
