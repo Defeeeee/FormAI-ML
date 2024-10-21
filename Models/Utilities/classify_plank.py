@@ -46,7 +46,8 @@ def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/m
 
     # Load the trained model
     try:
-        model = torch.load(model_path)
+        model = Net()
+        model.load_state_dict(torch.load(model_path))
         model.eval()  # Set the model to evaluation mode
     except FileNotFoundError:
         return "Error: Model file not found."
