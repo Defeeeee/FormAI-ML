@@ -31,32 +31,39 @@ def check():
     return 1
 
 
-@app.get('/analyze_plank')
-def analyze_plank_video(video_path: str | None = None):
-    if video_path is None:
+@app.get('/analyze/plank')
+def analyze_plank_video(video_url: str | None = None):
+    if video_url is None:
         return {'error': 'Please provide a video path'}
 
-    if check_resource(video_path) == 0:
+    if check_resource(video_url) == 0:
         return {'error': 'Invalid video path'}
 
     # Call the video analysis function
     try:
-        analysis = classify_plank(video_path, Net)
+        # analysis = classify_plank(video_path)
+        return {'error': 'WIP: Not implemented yet'}
     except Exception as e:
         return {'error': str(e)}
 
     return analysis
 
+@app.get('/analyze/squat')
+def analyze_squat_video(video_url: str | None = None):
+    if video_url is None:
+        return {'error': 'Please provide a video path'}
 
-@app.get('/analyze_plank/live')
-def analyze_plank_live_feed():
-    return {'error': 'WIP: Not implemented yet'}
-    # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
+    if check_resource(video_url) == 0:
+        return {'error': 'Invalid video path'}
 
+    # Call the video analysis function
+    try:
+        # analysis = classify_squat(video_path)
+        return {'error': 'WIP: Not implemented yet'}
+    except Exception as e:
+        return {'error': str(e)}
 
-# @app.get('/classify')
-# def classifiere(path: str | None = None):
-#     return classify(path)
+    return analysis
 
 
 if __name__ == '__main__':
