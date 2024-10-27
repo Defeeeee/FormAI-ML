@@ -31,17 +31,18 @@ def check():
     return 1
 
 
-@app.get('/analyze_plank')
-def analyze_plank_video(video_path: str | None = None):
-    if video_path is None:
+@app.get('/analyze/plank')
+def analyze_plank_video(video_url: str | None = None):
+    if video_url is None:
         return {'error': 'Please provide a video path'}
 
-    if check_resource(video_path) == 0:
+    if check_resource(video_url) == 0:
         return {'error': 'Invalid video path'}
 
     # Call the video analysis function
     try:
-        analysis = classify_plank(video_path)
+        # analysis = classify_plank(video_path)
+        return {'error': 'WIP: Not implemented yet'}
     except Exception as e:
         return {'error': str(e)}
 
