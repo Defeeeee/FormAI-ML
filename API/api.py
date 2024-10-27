@@ -49,16 +49,5 @@ def analyze_plank_video(video_url: str | None = None):
     return analysis
 
 
-@app.get('/analyze_plank/live')
-def analyze_plank_live_feed():
-    return {'error': 'WIP: Not implemented yet'}
-    # return StreamingResponse(analyze_live_feed(), media_type="multipart/x-mixed-replace; boundary=frame")
-
-
-# @app.get('/classify')
-# def classifiere(path: str | None = None):
-#     return classify(path)
-
-
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8080)
