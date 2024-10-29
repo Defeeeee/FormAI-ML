@@ -41,7 +41,18 @@ def analyze_plank_video(video_url: str | None = None):
 
     # Call the video analysis function
     try:
-        # analysis = classify_plank(video_path)
+        analysis = classify_plank(video_url)
+        if analysis == "correct":
+            return {
+                'correcto': 1,
+                'issue': None
+
+            }
+        else:
+            return {
+                'correcto': 0,
+                'issue': analysis
+            }
         return {'error': 'WIP: Not implemented yet'}
     except Exception as e:
         return {'error': str(e)}
@@ -59,6 +70,17 @@ def analyze_squat_video(video_url: str | None = None):
     # Call the video analysis function
     try:
         # analysis = classify_squat(video_path)
+        # if analysis == "correct":
+        #     return {
+        #         'correcto': 1,
+        #         'issue': None
+        #
+        #     }
+        # else:
+        #     return {
+        #         'correcto': 0,
+        #         'issue': analysis
+        #     }
         return {'error': 'WIP: Not implemented yet'}
     except Exception as e:
         return {'error': str(e)}
