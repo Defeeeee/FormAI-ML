@@ -5,6 +5,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import os
+import io
 
 mp_pose = mp.solutions.pose
 
@@ -35,7 +36,10 @@ def classify_plank_live(model_path=os.path.join(root, 'Models/Core/Plank/model.p
 
     # Load the trained model
     try:
-        model = torch.load(model_path)
+        model = Net()
+        with open(model_path, 'rb') as f:
+            buffer = io.BytesIO(f.read())
+        model.load_state_dict(torch.load(buffer))
         model.eval()  # Set the model to evaluation mode
     except FileNotFoundError:
         print("Error: Model file not found.")

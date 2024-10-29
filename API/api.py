@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from Feedback.Live_feedback.main import analyze_live_feed
 # from Feedback.Text_Feedback.main import analyze_video
 
-from Models.Utilities.classify_plank import classify_plank
+from Models.Utilities.classify_plank import classify_plank, Net
 
 app = FastAPI()
 

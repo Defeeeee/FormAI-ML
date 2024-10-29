@@ -6,6 +6,7 @@ import mediapipe as mp
 import numpy as np
 import requests
 import os
+import io
 
 mp_pose = mp.solutions.pose
 
@@ -47,7 +48,9 @@ def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/m
     # Load the trained model
     try:
         model = Net()
-        model.load_state_dict(torch.load(model_path))
+        with open(model_path, 'rb') as f:
+            buffer = io.BytesIO(f.read())
+        model.load_state_dict(torch.load(buffer))
         model.eval()  # Set the model to evaluation mode
     except FileNotFoundError:
         return "Error: Model file not found."
