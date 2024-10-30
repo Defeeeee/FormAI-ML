@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from Feedback.Text_Feedback.main import analyze_video
 
 from Models.Utilities.classify_plank import classify_plank, Net
+from Feedback.Plank_nn.plank_feedback import analyze_plank_video as analyze_plank_video_feedback
 
 app = FastAPI()
 
@@ -41,23 +42,10 @@ def analyze_plank_video(video_url: str | None = None):
 
     # Call the video analysis function
     try:
-        analysis = classify_plank(video_url)
-        if analysis == "correct":
-            return {
-                'correcto': True,
-                'issue': None
-
-            }
-        else:
-            return {
-                'correcto': False,
-                'issue': analysis
-            }
-        return {'error': 'WIP: Not implemented yet'}
+        analysis = analyze_plank_video_feedback(video_url)
+        return analysis
     except Exception as e:
         return {'error': str(e)}
-
-    return analysis
 
 @app.get('/analyze/squat')
 def analyze_squat_video(video_url: str | None = None):
