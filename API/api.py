@@ -44,13 +44,13 @@ def analyze_plank_video(video_url: str | None = None):
         analysis = classify_plank(video_url)
         if analysis == "correct":
             return {
-                'correcto': 1,
+                'correcto': True,
                 'issue': None
 
             }
         else:
             return {
-                'correcto': 0,
+                'correcto': False,
                 'issue': analysis
             }
         return {'error': 'WIP: Not implemented yet'}
@@ -72,13 +72,13 @@ def analyze_squat_video(video_url: str | None = None):
         # analysis = classify_squat(video_path)
         # if analysis == "correct":
         #     return {
-        #         'correcto': 1,
+        #         'correcto': True,
         #         'issue': None
         #
         #     }
         # else:
         #     return {
-        #         'correcto': 0,
+        #         'correcto': True,
         #         'issue': analysis
         #     }
         return {'error': 'WIP: Not implemented yet'}
