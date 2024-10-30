@@ -3,7 +3,6 @@ name: Pull on Push
 on:
   push:
     branches:
-      - beta
 
 jobs:
   pull-repo:
