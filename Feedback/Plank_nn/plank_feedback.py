@@ -88,7 +88,7 @@ def aggregate_predictions(predictions):
 
 
 def analyze_plank_video(video_path):
-    model_path = os.path.join(root, 'Models/Plank/model.pth')
+    model_path = os.path.join(root, 'Models/Plank/Core/model.pth')
     model = load_model(model_path)
     predictions = process_video(video_path, model)
     result = aggregate_predictions(predictions)
