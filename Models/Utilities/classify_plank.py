@@ -50,7 +50,7 @@ def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/m
         model = Net()
         with open(model_path, 'rb') as f:
             buffer = io.BytesIO(f.read())
-        model.load_state_dict(torch.load(buffer))
+        model.load_state_dict(torch.load(buffer, map_location=torch.device('cpu')))
         model.eval()  # Set the model to evaluation mode
     except FileNotFoundError:
         return "Error: Model file not found."
