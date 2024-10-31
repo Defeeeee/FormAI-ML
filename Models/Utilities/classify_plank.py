@@ -107,18 +107,16 @@ def classify_plank(image_url, model_path=os.path.join(root, 'Models/Core/Plank/m
         # Make prediction
         with torch.no_grad():
             output = model(input_tensor)
-            _, prediction = torch.max(output.data, 1)
+            probabilities = F.softmax(output, dim=1)  # Get probabilities
+            confidence, prediction = torch.max(probabilities, 1)
             prediction_class = prediction.item()
+            confidence_value = confidence.item() * 100
 
         # Map prediction to class labels
-        if prediction_class == 2:
-            return "high back"
-        elif prediction_class == 1:
-            return "low back"
-        elif prediction_class == 0:
-            return "correct"
-        else:
-            return "Error: Invalid prediction class."
+        class_labels = ["correct", "low back", "high back"]
+        predicted_label = class_labels[prediction_class]
+
+        return f"{predicted_label} ({confidence_value:.2f}%)"
     except Exception as e:
         return f"Error processing landmarks: {e}"
 

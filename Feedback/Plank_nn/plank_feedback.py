@@ -25,21 +25,6 @@ class Net(nn.Module):
         return self.linear_relu_stack(x)
 
 
-class SquatNet(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(18, 64),
-            nn.ReLU(),
-            nn.Linear(64, 64),
-            nn.ReLU(),
-            nn.Linear(64, 3)
-        )
-
-    def forward(self, x):
-        return self.linear_relu_stack(x)
-
-
 def load_model(model_path, model_class=Net):
     model = model_class()
     loaded_data = torch.load(model_path)
@@ -51,55 +36,33 @@ def load_model(model_path, model_class=Net):
     return model
 
 
-def extract_landmarks_from_frame(frame, pose, exercise_type="plank"):
+def extract_landmarks_from_frame(frame, pose):
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = pose.process(image)
     if results.pose_landmarks:
         landmarks = results.pose_landmarks.landmark
-        if exercise_type == "plank":
-            return [
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].y
-            ]
-        elif exercise_type == "squat":
-            return [
-                landmarks[mp.solutions.pose.PoseLandmark.NOSE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.NOSE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].y,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].x,
-                landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].y
-            ]
+        return [
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].x,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_SHOULDER].y,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].x,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_SHOULDER].y,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].x,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_HIP].y,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].x,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_HIP].y,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].x,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_KNEE].y,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].x,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_KNEE].y,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].x,
+            landmarks[mp.solutions.pose.PoseLandmark.LEFT_ANKLE].y,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].x,
+            landmarks[mp.solutions.pose.PoseLandmark.RIGHT_ANKLE].y
+        ]
     return None
 
 
-def process_video(video_path, model, exercise_type="plank"):
+def process_video(video_path, model):
     cap = cv2.VideoCapture(video_path)
     mp_pose = mp.solutions.pose
     predictions = []
@@ -110,7 +73,7 @@ def process_video(video_path, model, exercise_type="plank"):
             if not ret:
                 break
 
-            landmarks = extract_landmarks_from_frame(frame, pose, exercise_type)
+            landmarks = extract_landmarks_from_frame(frame, pose)
             if landmarks:
                 input_tensor = torch.tensor([landmarks], dtype=torch.float32)
                 with torch.no_grad():
@@ -131,7 +94,7 @@ def aggregate_predictions(predictions):
 def analyze_plank_video(video_path):
     model_path = os.path.join(root, 'Models/Core/Plank/model.pth')
     model = load_model(model_path)
-    predictions = process_video(video_path, model, exercise_type="plank")
+    predictions = process_video(video_path, model)
     result = aggregate_predictions(predictions)
 
     if result == 0:
@@ -144,25 +107,4 @@ def analyze_plank_video(video_path):
         return {
             'correcto': False,
             'issue': issues[result - 1]
-        }
-
-
-def analyze_squat_video(video_path):
-    model_path = os.path.join(root, 'Models/Core/Squat/model.pth')
-    model = load_model(model_path, model_class=SquatNet)
-    predictions = process_video(video_path, model, exercise_type="squat")
-    result = aggregate_predictions(predictions)
-
-    if result == 0:
-        return {
-            'correcto': True,
-            'issue': None,
-            'confidence': 0.85  # Placeholder confidence value
-        }
-    else:
-        issues = ["low back", "high back"]
-        return {
-            'correcto': False,
-            'issue': issues[result - 1],
-            'confidence': 0.85  # Placeholder confidence value
         }
