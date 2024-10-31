@@ -292,7 +292,7 @@ def process_images(image_links):
 
 def process_squat(image_links):
     """
-    Processes a list of image links, extracts landmarks, labels planks, and saves data to CSV.
+    Processes a list of image links, extracts landmarks, labels squats, and saves data to CSV.
 
     Args:
         image_links: A list of URLs or file paths to images.
@@ -328,7 +328,7 @@ def process_squat(image_links):
                         preprocessed_landmarks = preprocess_landmarks(
                             landmarks_list, exercise_type="squat")[0]
 
-                        # Label the plank (pass the 'results' object here)
+                        # Label the squat (pass the 'results' object here)
                         label = label_squat(image.copy(),
                                             results.pose_landmarks)
                         if label == -1:  # Exit if Esc key is pressed
