@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from Models.Utilities.classify_plank import classify_plank, Net
 from Feedback.Plank_nn.plank_feedback import analyze_plank_video as analyze_plank_video_feedback
+from Feedback.Squat_nn.squat_feedback import analyze_squat_video as analyze_squat_video_feedback
 
 app = FastAPI()
 
@@ -56,7 +57,11 @@ def analyze_squat_video(video_url: str | None = None):
         return {'error': 'Invalid video path'}
 
     # Call the video analysis function
-    return {'error': 'Not implemented yet'}
+    try:
+        analysis = analyze_squat_video_feedback(video_url)
+        return analysis
+    except Exception as e:
+        return {'error': str(e)}
 
 
 if __name__ == '__main__':
