@@ -108,3 +108,21 @@ def analyze_plank_video(video_path):
             'correcto': False,
             'issue': issues[result - 1]
         }
+
+def analyze_squat_video(video_path):
+    model_path = os.path.join(root, 'Models/Core/Squat/model.pth')
+    model = load_model(model_path, model_class=SquatNet)
+    predictions = process_video(video_path, model, exercise_type="squat")
+    result = aggregate_predictions(predictions)
+
+    if result == 0:
+        return {
+            'correcto': True,
+            'issue': None,
+        }
+    else:
+        issues = ["low back", "high back"]
+        return {
+            'correcto': False,
+            'issue': issues[result - 1],
+        }
