@@ -13,14 +13,16 @@ root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.fc1 = nn.Linear(16, 64)
-        self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, 3)
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(16, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 3)
+        )
+
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
+        return self.linear_relu_stack(x)
 
 
 def load_model(model_path, model_class=Net):
