@@ -24,19 +24,6 @@ class Net(nn.Module):
     def forward(self, x):
         return self.linear_relu_stack(x)
 
-class SquatNet(nn.Module):
-    def __init__(self):
-        super().__init__()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(18, 64),
-            nn.ReLU(),
-            nn.Linear(64, 64),
-            nn.ReLU(),
-            nn.Linear(64, 3)
-        )
-
-    def forward(self, x):
-        return self.linear_relu_stack(x)
 
 def load_model(model_path, model_class=Net):
     model = model_class()
@@ -120,22 +107,4 @@ def analyze_plank_video(video_path):
         return {
             'correcto': False,
             'issue': issues[result - 1]
-        }
-
-def analyze_squat_video(video_path):
-    model_path = os.path.join(root, 'Models/Core/Squat/model.pth')
-    model = load_model(model_path, model_class=SquatNet)
-    predictions = process_video(video_path, model, exercise_type="squat")
-    result = aggregate_predictions(predictions)
-
-    if result == 0:
-        return {
-            'correcto': True,
-            'issue': None,
-        }
-    else:
-        issues = ["low back", "high back"]
-        return {
-            'correcto': False,
-            'issue': issues[result - 1],
         }
