@@ -24,6 +24,19 @@ class Net(nn.Module):
     def forward(self, x):
         return self.linear_relu_stack(x)
 
+class SquatNet(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(18, 64),
+            nn.ReLU(),
+            nn.Linear(64, 64),
+            nn.ReLU(),
+            nn.Linear(64, 3)
+        )
+
+    def forward(self, x):
+        return self.linear_relu_stack(x)
 
 def load_model(model_path, model_class=Net):
     model = model_class()
