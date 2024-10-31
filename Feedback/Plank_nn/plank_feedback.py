@@ -27,10 +27,11 @@ class Net(nn.Module):
 
 def load_model(model_path):
     model = Net()
-    state_dict = torch.load(model_path)
-    if isinstance(state_dict, Net):
-        state_dict = state_dict.state_dict()
-    model.load_state_dict(state_dict)
+    loaded_data = torch.load(model_path)
+    if isinstance(loaded_data, dict):  # Check if it's already a state_dict
+        model.load_state_dict(loaded_data)
+    else:  # If it's the whole model, extract the state_dict
+        model.load_state_dict(loaded_data.state_dict())
     model.eval()
     return model
 
