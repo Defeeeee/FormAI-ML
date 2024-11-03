@@ -12,13 +12,22 @@ root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 class Net(nn.Module):
     def __init__(self):
-        super(Net, self).__init__()
+        super().__init__()
+        # with 3 hidden layers with 128 neurons each and ReLU activation and a final output layer with 3 neurons and softmax activation
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(16, 64),
+            nn.Linear(16, 256),
             nn.ReLU(),
-            nn.Linear(64, 64),
+            nn.Linear(256, 512),
             nn.ReLU(),
-            nn.Linear(64, 3)
+            nn.Linear(512, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 256),
+            nn.ReLU(),
+            nn.Linear(256, 3)
         )
 
     def forward(self, x):
