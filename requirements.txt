@@ -11,3 +11,9 @@ opencv-python
 joblib
 torch
 requests
+torchsummary
+setuptools
+tensorflow
+click
+keras
+scipy
