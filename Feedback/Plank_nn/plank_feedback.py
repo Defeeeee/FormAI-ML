@@ -173,7 +173,7 @@ def predict_plank(video_url, model_path=ROOT + "/Models/Core/Plank/plank_model.p
         "keyframes_results": [bool(x) for x in plank_results]
     }
 
-    return json.dumps(result)
+    return result
 
 if __name__ == "__main__":
     image_url = "https://i.ytimg.com/vi/zygY7fXFOz4/sddefault.jpg"
