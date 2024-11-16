@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from Feedback.Live_feedback.main import analyze_live_feed
 # from Feedback.Text_Feedback.main import analyze_video
 
-from Feedback.Plank_nn.plank_feedback import analyze_plank_video as analyze_plank_video_feedback
+from Feedback.Plank_nn.plank_feedback import predict_plank
 from Feedback.Squat_nn.squat_feedback import analyze_squat_video as analyze_squat_video_feedback
 
 app = FastAPI()
@@ -60,7 +60,7 @@ def analyze_plank_video(video_url: str | None = None):
 
     # Call the video analysis function
     try:
-        analysis = analyze_plank_video_feedback(video_url)
+        analysis = predict_plank(video_url)
         return analysis
     except Exception as e:
         return {'error': str(e)}
