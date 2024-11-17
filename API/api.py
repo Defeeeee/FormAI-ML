@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from Feedback.Text_Feedback.main import analyze_video
 
 from Feedback.Plank_nn.plank_feedback import predict_plank
-from Feedback.Squat_nn.squat_feedback import analyze_squat_video as analyze_squat_video_feedback
+# from Feedback.Squat_nn.squat_feedback import analyze_squat_video as analyze_squat_video_feedback
 
 app = FastAPI()
 
