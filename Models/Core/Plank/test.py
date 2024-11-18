@@ -7,6 +7,8 @@ import requests
 
 mp_pose = mp.solutions.pose
 
+# Plank CNN model
+
 class PlankCNN(nn.Module):
     def __init__(self):
         super(PlankCNN, self).__init__()
@@ -16,13 +18,13 @@ class PlankCNN(nn.Module):
         self.conv2 = nn.Conv1d(8, 16, kernel_size=3, padding=1)
         self.relu2 = nn.ReLU()
         self.pool2 = nn.MaxPool1d(2)
-        self.fc1 = nn.Linear(16, 7)
+        self.fc1 = nn.Linear(16, 7)  # Corrected input size
 
     def forward(self, x):
         x = x.unsqueeze(1)
         x = self.pool1(self.relu1(self.conv1(x)))
         x = self.pool2(self.relu2(self.conv2(x)))
-        x = x.view(-1, 16)
+        x = x.view(-1, 16)  # Corrected flattening
         x = self.fc1(x)
         return x
 
