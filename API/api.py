@@ -76,8 +76,9 @@ def analyze_squat_video(video_url: str | None = None):
 
     # Call the video analysis function
     try:
-        analysis = analyze_squat_video_feedback(video_url)
-        return analysis
+        # analysis = analyze_squat_video_feedback(video_url)
+        # return analysis
+        return {'error': 'Not implemented'}
     except Exception as e:
         return {'error': str(e)}
 
