@@ -138,7 +138,7 @@ def download_video(video_url):
         print(f"Error downloading video from {video_url}: {e}")
         return None
 
-def predict_plank(video_url, model_path=ROOT + "/Models/Core/Plank/plank_model.pth", threshold=0.1, num_keyframes=5):
+def predict_plank(video_url, model_path=ROOT + "/Models/Core/Plank/plank_model.pth", threshold=0.1, num_keyframes=20):
     model = PlankCNN()
     model.load_state_dict(torch.load(model_path))
     model.eval()
