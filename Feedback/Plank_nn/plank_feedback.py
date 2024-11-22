@@ -93,7 +93,7 @@ def extract_plank_features(image):
         }
         return features
 
-def extract_key_frames(video_url, num_keyframes=5):
+def extract_key_frames(video_url, num_keyframes=20):
     """
     Extracts keyframes from a video URL.
 
