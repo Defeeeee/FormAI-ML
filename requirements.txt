@@ -17,3 +17,4 @@ tensorflow
 click
 keras
 scipy
+aiohttp
