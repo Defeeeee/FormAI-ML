@@ -3,10 +3,12 @@ import os
 import subprocess
 import sys
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from Feedback.Squat_nn.squat_feedback import analyze_squat_video
 from Feedback.Plank_nn.plank_feedback import predict_plank
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 app = FastAPI()
 
 def check_resource(url: str):
