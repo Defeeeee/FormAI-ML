@@ -4,6 +4,7 @@ import numpy as np
 import requests
 from tensorflow import keras
 import os
+import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Load your trained Keras model
@@ -70,28 +71,30 @@ def download_video(video_url):
     try:
         response = requests.get(video_url, stream=True)
         response.raise_for_status()
-        temp_file_name = "temp_video.mp4"  # You can customize the file name
-        with open(temp_file_name, 'wb') as f:
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as temp_file:
             for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        return temp_file_name
+                temp_file.write(chunk)
+            temp_file_path = temp_file.name
+        return temp_file_path
     except Exception as e:
         print(f"Error downloading video from {video_url}: {e}")
         return None
 
 def analyze_squat_video(video_url):
     """
-    Analyzes a squat video, extracts keyframes, predicts overall quality,
+    Analyzes a squat video from a URL, extracts keyframes, predicts overall quality,
     and returns a detailed result dictionary.
 
     Args:
-      video_path: Path to the squat video file.
+      video_url: URL of the squat video.
 
     Returns:
       A dictionary containing analysis results.
     """
-
     video_path = download_video(video_url)
+    if video_path is None:
+        return {"success": False, "message": "Error downloading video."}
 
     cap = cv2.VideoCapture(video_path)
     keyframes = []
@@ -131,6 +134,7 @@ def analyze_squat_video(video_url):
                 keyframes.append(frame)
 
     cap.release()
+    os.remove(video_path)  # Remove the temporary video file
 
     # Determine overall squat quality
     if len(all_predictions) > 0:
