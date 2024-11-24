@@ -4,6 +4,7 @@ import subprocess
 import sys
 from pydantic import BaseModel
 import dotenv
+from fastapi.responses import JSONResponse  # For explicit JSON responses
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -92,11 +93,6 @@ def predict_squat(video_url: str | None = None):
         return analysis
     except Exception as e:
         return {'error': str(e)}
-
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse  # For explicit JSON responses
-
-app = FastAPI()
 
 @app.post('/gemini')
 async def gemini(data: ExerciseData):
