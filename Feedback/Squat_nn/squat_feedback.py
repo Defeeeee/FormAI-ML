@@ -3,9 +3,11 @@ import mediapipe as mp
 import numpy as np
 import requests
 from tensorflow import keras
+import os
 
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Load your trained Keras model
-model = keras.models.load_model('/Users/defeee/Documents/GitHub/FormAI-ML/Models/Core/Squat/squat_model_tf2.h5')  # Replace with your model path
+model = keras.models.load_model(ROOT + '/Models/Core/Squat/squat_model_tf2.h5')  # Replace with your model path
 
 # Initialize Mediapipe pose solution
 mp_pose = mp.solutions.pose
