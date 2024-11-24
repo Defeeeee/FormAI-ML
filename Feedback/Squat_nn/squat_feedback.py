@@ -1,3 +1,5 @@
+import json
+
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -164,6 +166,7 @@ def analyze_squat_video(video_url):
     }
 
     return result
+
 
 if __name__ == "__main__":
     video_url = "https://s36370.pcdn.co/wp-content/uploads/2016/07/BW-Squat-Finish-Side-View.jpg"
