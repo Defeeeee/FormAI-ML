@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # from Feedback.Text_Feedback.main import analyze_video
 
 from Feedback.Plank_nn.plank_feedback import predict_plank
-# from Feedback.Squat_nn.squat_feedback import analyze_squat_video as analyze_squat_video_feedback
+from Feedback.Squat_nn.squat_feedback import analyze_squat_video
 
 app = FastAPI()
 
@@ -76,9 +76,7 @@ def analyze_squat_video(video_url: str | None = None):
 
     # Call the video analysis function
     try:
-        # analysis = analyze_squat_video_feedback(video_url)
-        # return analysis
-        return {'error': 'Not implemented'}
+        return analyze_squat_video(video_url)
     except Exception as e:
         return {'error': str(e)}
 

@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+import requests
 from tensorflow import keras
 
 # Load your trained Keras model
@@ -62,7 +63,21 @@ def get_pose_angles(frame):
         else:
             return None
 
-def analyze_squat_video(video_path):
+def download_video(video_url):
+    """Downloads a video from a URL and saves it as a temporary file."""
+    try:
+        response = requests.get(video_url, stream=True)
+        response.raise_for_status()
+        temp_file_name = "temp_video.mp4"  # You can customize the file name
+        with open(temp_file_name, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        return temp_file_name
+    except Exception as e:
+        print(f"Error downloading video from {video_url}: {e}")
+        return None
+
+def analyze_squat_video(video_url):
     """
     Analyzes a squat video, extracts keyframes, predicts overall quality,
     and returns a detailed result dictionary.
@@ -73,6 +88,8 @@ def analyze_squat_video(video_path):
     Returns:
       A dictionary containing analysis results.
     """
+
+    video_path = download_video(video_url)
 
     cap = cv2.VideoCapture(video_path)
     keyframes = []
