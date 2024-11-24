@@ -109,7 +109,8 @@ def analyze_squat_video(video_url):
         frame_count += 1
 
         # Process only every 10th frame
-        if frame_count % 3 == 0:
+
+        if frame_count % 3 == 0 or frame_count < 3:
             angles = get_pose_angles(frame)
             if angles:
                 if angles['left_knee_angle'] > 140.0 or angles['right_knee_angle'] > 140.0:
@@ -146,7 +147,8 @@ def analyze_squat_video(video_url):
     if len(all_predictions) > 0:
         # if 10% are good, then it is good
         majority_prediction = max(set(all_predictions), key=all_predictions.count)
-        overall_quality = "good" if majority_prediction == 1 else "bad"
+        print(all_predictions)
+        overall_quality = "good" if majority_prediction == 0 else "bad"
         average_confidence = sum(confidences) / len(confidences)
     else:
         overall_quality = "unknown"
@@ -162,3 +164,8 @@ def analyze_squat_video(video_url):
     }
 
     return result
+
+if __name__ == "__main__":
+    video_url = "https://s36370.pcdn.co/wp-content/uploads/2016/07/BW-Squat-Finish-Side-View.jpg"
+    result = analyze_squat_video(video_url)
+    print(result)
