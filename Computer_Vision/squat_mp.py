@@ -1,70 +1,134 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-import pandas as pd
-import os
+from tensorflow import keras
+from sklearn.preprocessing import MinMaxScaler
 
+# Load your trained Keras model
+model = keras.models.load_model('/Users/defeee/Documents/GitHub/FormAI-ML/Models/Core/Squat/squat_model_tf2.h5')  # Replace with your model path
+
+# Initialize Mediapipe pose solution
 mp_pose = mp.solutions.pose
+pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
 
+# Feature scaler (use the same scaler used during training)
+scaler = MinMaxScaler()  # You might need to load the scaler if you saved it separately
+
+def get_pose_angles(frame):
+    """
+    Detects pose landmarks in a frame using Mediapipe and calculates angles.
+
+    Args:
+      frame: An image frame.
+
+    Returns:
+      A dictionary of angles.
+    """
+    # Convert BGR frame to RGB
+    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = pose.process(image_rgb)
+
+    if results.pose_landmarks:
+        landmarks = results.pose_landmarks.landmark
+
+        # Calculate angles
+        angles = {
+            'left_knee_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                               landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value],
+                                               landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value]),
+            'right_knee_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                                landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value],
+                                                landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value]),
+            'left_hip_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                              landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                              landmarks[mp_pose.PoseLandmark.LEFT_KNEE.value]),
+            'right_hip_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value],
+                                               landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value],
+                                               landmarks[mp_pose.PoseLandmark.RIGHT_KNEE.value]),
+            'back_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value],
+                                          landmarks[mp_pose.PoseLandmark.LEFT_HIP.value],
+                                          landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value]),
+        }
+        return angles
+    else:
+        return None
 
 def calculate_angle(a, b, c):
-    a = np.array([a.x, a.y])
-    b = np.array([b.x, b.y])
-    c = np.array([c.x, c.y])
+    """Calculates the angle between three points in 3D space."""
+    a = np.array([a.x, a.y, a.z])
+    b = np.array([b.x, b.y, b.z])
+    c = np.array([c.x, c.y, c.z])
     radians = np.arctan2(c[1] - b[1], c[0] - b[0]) - np.arctan2(a[1] - b[1], a[0] - b[0])
     angle = np.abs(radians * 180.0 / np.pi)
     if angle > 180.0:
         angle = 360 - angle
     return angle
 
+def analyze_squat_video(video_path):
+    """
+    Analyzes a squat video, extracts keyframes, and predicts overall quality.
 
-def extract_squat_features(image_path):
-    with mp_pose.Pose(static_image_mode=True, min_detection_confidence=0.5) as pose:
-        image = cv2.imread(image_path)
-        results = pose.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        if not results.pose_landmarks:
-            return None
-        landmarks = results.pose_landmarks.landmark
+    Args:
+      video_path: Path to the squat video file.
 
-        # Feature engineering (Squat-specific features)
-        features = {
-            'left_knee_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_HIP],
-                                               landmarks[mp_pose.PoseLandmark.LEFT_KNEE],
-                                               landmarks[mp_pose.PoseLandmark.LEFT_ANKLE]),
-            'right_knee_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_HIP],
-                                                landmarks[mp_pose.PoseLandmark.RIGHT_KNEE],
-                                                landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE]),
-            'left_hip_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
-                                              landmarks[mp_pose.PoseLandmark.LEFT_HIP],
-                                              landmarks[mp_pose.PoseLandmark.LEFT_KNEE]),
-            'right_hip_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER],
-                                               landmarks[mp_pose.PoseLandmark.RIGHT_HIP],
-                                               landmarks[mp_pose.PoseLandmark.RIGHT_KNEE]),
-            'back_angle': calculate_angle(landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER],
-                                          landmarks[mp_pose.PoseLandmark.LEFT_HIP],
-                                          landmarks[mp_pose.PoseLandmark.LEFT_ANKLE]),  # Adjust landmarks as needed
-            # Add more features as needed (e.g., knee valgus, ankle dorsiflexion)
-        }
-        return features
+    Returns:
+      A list of keyframe images and the overall prediction ("good" or "bad").
+    """
 
+    cap = cv2.VideoCapture(video_path)
+    keyframes = []
+    all_predictions = []
 
-def process_images_from_csv(csv_path, image_folder):
-    df = pd.read_csv(csv_path)
-    features_list = []
-    for index, row in df.iterrows():
-        image_path = os.path.join(image_folder, row['filename'])
-        features = extract_squat_features(image_path)
-        if features:
-            features['filename'] = row['filename']  # Keep the filename
-            features_list.append(features)
+    while(cap.isOpened()):
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    features_df = pd.DataFrame(features_list)
-    final_df = pd.merge(df, features_df, on='filename', how='left')
-    final_df.to_csv('squat_features_with_labels_TEST.csv', index=False)
-    print("Features saved to squat_features_with_labels.csv")
+        angles = get_pose_angles(frame)
+        if angles:
+            # Prepare features for the model
+            features = np.array([
+                angles['left_knee_angle'],
+                angles['right_knee_angle'],
+                angles['left_hip_angle'],
+                angles['right_hip_angle'],
+                angles['back_angle']
+            ]).reshape(1, -1)
 
+            # Normalize features
+            features = scaler.transform(features)
 
-if __name__ == "__main__":
-    csv_path = '/Users/defeee/Downloads/Squat_Classification.v4-test.multiclass/test/_classes.csv'
-    image_folder = '/Users/defeee/Downloads/Squat_Classification.v4-test.multiclass/test'
-    process_images_from_csv(csv_path, image_folder)
+            # Reshape for the CNN model
+            features = features.reshape(1, 5, 1)
+
+            # Make prediction
+            prediction = model.predict(features)
+            predicted_class = np.argmax(prediction)
+            all_predictions.append(predicted_class)
+
+            # Simple keyframe extraction (replace with more robust logic if needed)
+            if predicted_class == 1:  # Assuming 1 is the "good" class
+                keyframes.append(frame)
+
+    cap.release()
+
+    # Determine overall squat quality
+    if len(all_predictions) > 0:
+        majority_prediction = max(set(all_predictions), key=all_predictions.count)
+        overall_quality = "good" if majority_prediction == 1 else "bad"
+    else:
+        overall_quality = "unknown"
+
+    return keyframes, overall_quality
+
+# Example usage:
+video_path = 'path/to/your/squat_video.mp4'  # Replace with your video path
+keyframes, overall_quality = analyze_squat_video(video_path)
+
+# Display keyframes
+for i, keyframe in enumerate(keyframes):
+    cv2.imshow(f'Keyframe {i+1}', keyframe)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+print("Overall Squat Quality:", overall_quality)
