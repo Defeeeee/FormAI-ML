@@ -2,3 +2,4 @@ API/.env
 **/.DS_Store
 **/.idea/
 .cadence/
+**/.env
