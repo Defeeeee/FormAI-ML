@@ -101,7 +101,7 @@ def predict_squat(image_path):
         return "Error: Could not extract features.", None
 
 
-image_path = '/Users/defeee/Downloads/Squat_Classification.v4-test.multiclass/train/images501_jpg.rf.0b8e87199a3a6351fa72fe781632d30d.jpg'  # Replace with the actual path to your image
+image_path = '/Users/defeee/Downloads/images (6).jpeg'  # Replace with the actual path to your image
 predicted_class, probability = predict_squat(image_path)
 print(f"Predicted class: {predicted_class}")
 if probability is not None:
