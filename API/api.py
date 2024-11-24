@@ -29,7 +29,6 @@ class ExerciseData(BaseModel):
 async def call_gemini_api(prompt: str):
     """Calls the Gemini API with the given prompt."""
     api_key = os.getenv("GEMINI_API_KEY")
-    print(f"API Key: {api_key}")
     api_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={api_key}"
     headers = {
         "Content-Type": "application/json"
