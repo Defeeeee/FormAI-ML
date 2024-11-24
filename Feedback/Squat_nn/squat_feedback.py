@@ -151,8 +151,3 @@ def analyze_squat_video(video_url):
     }
 
     return result
-# Example usage:
-video_path = "/Users/defeee/Downloads/BW-Squat-Finish-Side-View.jpg"  # Replace with your video path
-res = analyze_squat_video(video_path)
-
-print(res)
