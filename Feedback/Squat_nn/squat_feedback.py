@@ -108,6 +108,8 @@ def analyze_squat_video(video_url):
         if not ret:
             break
 
+        frame = cv2.resize(frame, (640, 480))
+
         frame_count += 1
 
         # Process only every 10th frame
