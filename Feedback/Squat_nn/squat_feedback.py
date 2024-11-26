@@ -117,7 +117,7 @@ def analyze_squat_video(video_url):
         if frame_count % 5 == 0 or frame_count <= 1:
             angles = get_pose_angles(frame)
             if angles:
-                if angles['left_knee_angle'] > 140.0 or angles['right_knee_angle'] > 140.0:
+                if angles['left_knee_angle'] > 120.0 or angles['right_knee_angle'] > 120.0:
                     continue
 
                 # Prepare features for the model
