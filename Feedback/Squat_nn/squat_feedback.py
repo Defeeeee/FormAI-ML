@@ -40,7 +40,7 @@ def get_pose_angles(frame):
     """
     # Convert BGR frame to RGB
     image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+    with mp_pose.Pose(min_detection_confidence=0.3, min_tracking_confidence=0.3) as pose:
         results = pose.process(image_rgb)
 
         if results.pose_landmarks:
@@ -114,7 +114,7 @@ def analyze_squat_video(video_url):
 
         # Process only every 10th frame
 
-        if frame_count % 3 == 0 or frame_count < 3:
+        if frame_count % 5 == 0 or frame_count <= 1:
             angles = get_pose_angles(frame)
             if angles:
                 if angles['left_knee_angle'] > 140.0 or angles['right_knee_angle'] > 140.0:
