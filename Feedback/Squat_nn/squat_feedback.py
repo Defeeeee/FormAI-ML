@@ -10,6 +10,8 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 # Load your trained Keras model
 model = keras.models.load_model(ROOT + '/Models/Core/Squat/squat_model_tf2.h5')
 
@@ -171,6 +173,6 @@ def analyze_squat_video(video_url):
 
 
 if __name__ == "__main__":
-    video_url = "https://s36370.pcdn.co/wp-content/uploads/2016/07/BW-Squat-Finish-Side-View.jpg"
+    video_url = "https://res.cloudinary.com/dv4xloi62/video/upload/v1732645194/yjffvq6n5u84pybspnuw.mp4"
     result = analyze_squat_video(video_url)
     print(result)
